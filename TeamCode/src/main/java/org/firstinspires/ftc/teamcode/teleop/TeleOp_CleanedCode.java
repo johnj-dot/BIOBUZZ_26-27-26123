@@ -1,0 +1,57 @@
+package org.firstinspires.ftc.teamcode.teleop;
+
+
+import static java.lang.Thread.sleep;
+
+//import com.qualcomm.hardware.limelightvision.LLResult;
+//import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
+
+@TeleOp
+public class TeleOp_CleanedCode extends OpMode {
+    //Initializing and declaring all variables/motors
+    private ElapsedTime runtime = new ElapsedTime();
+    public Shooter shooter = new Shooter();
+    public Intake intake = new Intake();
+    public DriveTrain driveTrain = new DriveTrain();
+    public ElapsedTime TeleOpRuntime = new ElapsedTime();
+
+    @Override
+    public void init() {
+        driveTrain.init(hardwareMap);
+        intake.init(hardwareMap);
+        shooter.init(hardwareMap,intake);
+
+    }
+
+    @Override
+    public void start() {
+        runtime.reset();
+        TeleOpRuntime.reset();
+    }
+
+    @Override
+    public void loop() {
+        driveTrain.drive(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+
+        intake.update(gamepad2);
+        shooter.update(gamepad2);
+        driveTrain.update(gamepad1);
+
+        telemetry.addData("Current Motor Speed", shooter.getCurrentSpeed());
+        telemetry.addData("Target Launch Power", shooter.getTargetLaunchPower());
+        telemetry.addData("Speed Multiplier", driveTrain.getSpeedMultiplier());
+        telemetry.addData("Runtime:", TeleOpRuntime.seconds());
+        telemetry.setMsTransmissionInterval(30);
+        telemetry.update();
+    }
+}
+
+
