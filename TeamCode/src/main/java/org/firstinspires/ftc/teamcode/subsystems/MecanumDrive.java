@@ -1,23 +1,32 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
-public class DriveTrain{
+public class MecanumDrive {
+
+
+    // ---------------------- Getting Hardware ----------------
     private DcMotor frontLeftMotor;
     private DcMotor frontRightMotor;
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
+    private AprilTagAlignment aprilTagAlignment;
+
+
+    // ----------------------- Motor Variables -----------------
     double frontLeftMotorSpeed = 0;
     double frontRightMotorSpeed = 0;
     double backLeftMotorSpeed = 0;
     double backRightMotorSpeed = 0;
 
-    private double speedMultiplier = 0.55;
-    public void init(HardwareMap hwMap){
+
+    private double speedMultiplier = 0.50;
+
+
+    public void init(HardwareMap hwMap, AprilTagAlignment aprilTagAlignment){
+        this.aprilTagAlignment = aprilTagAlignment;
         frontLeftMotor = hwMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hwMap.get(DcMotor.class, "frontRightMotor");
         backLeftMotor = hwMap.get(DcMotor.class, "backLeftMotor");
@@ -35,6 +44,10 @@ public class DriveTrain{
     }
 
     public void drive(double y, double x, double rx) {
+        if (aprilTagAlignment != null) {
+            rx *= aprilTagAlignment.getRotationMultiplier();
+        }
+
         frontLeftMotorSpeed = -y + x + rx;
         backLeftMotorSpeed = -y - x + rx;
         frontRightMotorSpeed = -y - x - rx;
@@ -57,15 +70,19 @@ public class DriveTrain{
     }
     private void handleDpadSpeedSwitching(Gamepad gamepad1){
         if (gamepad1.dpadUpWasPressed()){
+            //Set speed to 100%
             setSpeedMultiplier(1.0);
         }
         if (gamepad1.dpadRightWasPressed()){
+            //Set speed to 75%
             setSpeedMultiplier(0.75);
         }
         if (gamepad1.dpadDownWasPressed()){
+            //Set speed to 50%
             setSpeedMultiplier(0.5);
         }
         if (gamepad1.dpadLeftWasPressed()){
+            //Set speed to 25%
             setSpeedMultiplier(0.25);
         }
     }

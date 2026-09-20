@@ -7,10 +7,9 @@ import static java.lang.Thread.sleep;
 //import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
@@ -20,7 +19,7 @@ public class TeleOp_CleanedCode extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     public Shooter shooter = new Shooter();
     public Intake intake = new Intake();
-    public DriveTrain driveTrain = new DriveTrain();
+    public MecanumDrive driveTrain = new MecanumDrive();
     public ElapsedTime TeleOpRuntime = new ElapsedTime();
 
     @Override
@@ -45,9 +44,16 @@ public class TeleOp_CleanedCode extends OpMode {
         shooter.update(gamepad2);
         driveTrain.update(gamepad1);
 
-        telemetry.addData("Current Motor Speed", shooter.getCurrentSpeed());
+
+        telemetry.addData("Robot Speed Multiplier", driveTrain.getSpeedMultiplier());
+
         telemetry.addData("Target Launch Power", shooter.getTargetLaunchPower());
-        telemetry.addData("Speed Multiplier", driveTrain.getSpeedMultiplier());
+        telemetry.addData("Current Motor Speed", shooter.getCurrentSpeed());
+        telemetry.addData("Shooter Status", shooter.getShooterStatus());
+        telemetry.addData("Gate Status", shooter.getGateStatus());
+        telemetry.addData("Intake Status", intake.getIntakeStatus());
+
+
         telemetry.addData("Runtime:", TeleOpRuntime.seconds());
         telemetry.setMsTransmissionInterval(30);
         telemetry.update();

@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -19,6 +21,9 @@ public class Shooter {
     double GATE_OPEN = 0.27;
     double GATE_CLOSED = 0.5;
 
+    //Status variables
+    String shooterStatus = "Off";
+    String gateStatus = "Closed";
 
     //Current target speed, zero is default
     double targetLaunchPower = 0;
@@ -35,6 +40,7 @@ public class Shooter {
     }
     public void stop(){
         //Stop all motion and close the gate
+        shooterStatus = "Off";
         shooter.setVelocity(0);
         intake.stop();
         closeGate();
@@ -43,13 +49,16 @@ public class Shooter {
         targetLaunchPower = speed;
     }
     public void openGate(){
+        gateStatus = "Open";
         gate.setPosition(GATE_OPEN);
     }
     public void closeGate(){
+        gateStatus = "Closed";
         gate.setPosition(GATE_CLOSED);
     }
 
     public void start(){
+        shooterStatus = "Starting";
         shooter.setVelocity(targetLaunchPower);
     }
     public double getCurrentSpeed(){
@@ -57,6 +66,12 @@ public class Shooter {
     }
     public double getTargetLaunchPower(){
         return targetLaunchPower;
+    }
+    public String getShooterStatus(){
+        return shooterStatus;
+    }
+    public String getGateStatus(){
+        return gateStatus;
     }
     public boolean isReady(){
         return shooter.getVelocity()>=(targetLaunchPower-50);
@@ -100,6 +115,7 @@ public class Shooter {
     private void handleAutoShooting(){
         //If motor speed is above/equal to target speed -50 then start the shooting process
         if (targetLaunchPower>0 && isReady()){
+            shooterStatus = "Shooting";
             intake.start();
             openGate();
         }
