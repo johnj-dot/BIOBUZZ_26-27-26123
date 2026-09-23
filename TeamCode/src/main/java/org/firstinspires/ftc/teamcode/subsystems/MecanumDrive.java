@@ -22,6 +22,10 @@ public class MecanumDrive {
     double backRightMotorSpeed = 0;
 
 
+    // ---------------------- Dpad Increments(Speed) ------------
+    double[] drivingSpeeds = {0.25,0.5,0.75,1.0};
+    int drivingSpeedsIndex = 1;
+
     private double speedMultiplier = 0.50;
 
 
@@ -46,6 +50,7 @@ public class MecanumDrive {
     public void drive(double y, double x, double rx) {
         if (aprilTagAlignment != null) {
             rx *= aprilTagAlignment.getRotationMultiplier();
+            rx += aprilTagAlignment.getAddedRotation();
         }
 
         frontLeftMotorSpeed = -y + x + rx;
@@ -69,21 +74,10 @@ public class MecanumDrive {
         handleDpadSpeedSwitching(gamepad1);
     }
     private void handleDpadSpeedSwitching(Gamepad gamepad1){
-        if (gamepad1.dpadUpWasPressed()){
-            //Set speed to 100%
-            setSpeedMultiplier(1.0);
-        }
         if (gamepad1.dpadRightWasPressed()){
-            //Set speed to 75%
-            setSpeedMultiplier(0.75);
+            drivingSpeedsIndex = (drivingSpeedsIndex+1) % drivingSpeeds.length;
+            setSpeedMultiplier(drivingSpeeds[drivingSpeedsIndex]);
         }
-        if (gamepad1.dpadDownWasPressed()){
-            //Set speed to 50%
-            setSpeedMultiplier(0.5);
-        }
-        if (gamepad1.dpadLeftWasPressed()){
-            //Set speed to 25%
-            setSpeedMultiplier(0.25);
-        }
+
     }
 }

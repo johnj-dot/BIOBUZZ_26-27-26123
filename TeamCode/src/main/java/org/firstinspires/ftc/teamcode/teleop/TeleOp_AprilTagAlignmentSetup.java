@@ -1,22 +1,18 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 
-import static java.lang.Thread.sleep;
-
-//import com.qualcomm.hardware.limelightvision.LLResult;
-//import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.AprilTagAlignment;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
 @TeleOp
-public class TeleOp_CleanedCode extends OpMode {
+public class TeleOp_AprilTagAlignmentSetup extends OpMode {
     //Initializing and declaring all variables/motors
     private final ElapsedTime runtime = new ElapsedTime();
     public Shooter shooter = new Shooter();
@@ -41,6 +37,7 @@ public class TeleOp_CleanedCode extends OpMode {
         runtime.reset();
         TeleOpRuntime.reset();
         limelight.start();
+        aprilTagAlignment.start();
     }
 
     @Override
@@ -54,13 +51,19 @@ public class TeleOp_CleanedCode extends OpMode {
         driveTrain.update(gamepad1);
 
 
-        telemetry.addData("Robot Speed Multiplier", driveTrain.getSpeedMultiplier());
+        telemetry.addData("Robot Speed Multiplier(G1DpadRight)", driveTrain.getSpeedMultiplier());
 
-        telemetry.addData("Target Launch Power", shooter.getTargetLaunchPower());
+        telemetry.addData("Target Launch Power(G2DpadUpRightDown)", shooter.getTargetLaunchPower());
         telemetry.addData("Current Motor Speed", shooter.getCurrentSpeed());
-        telemetry.addData("Shooter Status", shooter.getShooterStatus());
-        telemetry.addData("Gate Status", shooter.getGateStatus());
-        telemetry.addData("Intake Status", intake.getIntakeStatus());
+        telemetry.addData("Shooter Status(G2RightTrigger/Bumper)", shooter.getShooterStatus());
+        telemetry.addData("Gate Status(G2X/Y)", shooter.getGateStatus());
+        telemetry.addData("Intake Status(G2LeftTrigger/Bumper/Back)", intake.getIntakeStatus());
+
+        telemetry.addLine("----------------April Tags ---------------");
+        telemetry.addData("kP(G1DpadUp/Down)", aprilTagAlignment.getkP());
+        telemetry.addData("kD(G1DpadUp/Down)", aprilTagAlignment.getkD());
+        telemetry.addData("Step Size(G1B)", aprilTagAlignment.getStepSize());
+        telemetry.addData("Currently Modifying(G1DpadLeft)", aprilTagAlignment.getCurrentlyModifying());
 
 
         telemetry.addData("Runtime:", TeleOpRuntime.seconds());
