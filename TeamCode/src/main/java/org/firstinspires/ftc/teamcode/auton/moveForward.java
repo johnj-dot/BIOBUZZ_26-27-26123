@@ -5,10 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import static org.firstinspires.ftc.teamcode.Commons.PID_forward;
 
-
-import org.firstinspires.ftc.teamcode.Commons;
 
 @Autonomous(name = "wallMoveForward")
 public class moveForward extends LinearOpMode {

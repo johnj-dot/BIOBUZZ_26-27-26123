@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
-
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 @TeleOp
 public class TeleOp_AprilTagAlignmentSetup extends OpMode {
     //Initializing and declaring all variables/motors
@@ -24,6 +26,7 @@ public class TeleOp_AprilTagAlignmentSetup extends OpMode {
 
     @Override
     public void init() {
+        Log.v(Limelight.TAG, "Initializaing limelight");
         limelight.init(hardwareMap);
         aprilTagAlignment.init(limelight,runtime);
         driveTrain.init(hardwareMap,aprilTagAlignment);
@@ -60,12 +63,27 @@ public class TeleOp_AprilTagAlignmentSetup extends OpMode {
         telemetry.addData("Intake Status(G2LeftTrigger/Bumper/Back)", intake.getIntakeStatus());
 
         telemetry.addLine("----------------April Tags ---------------");
-        telemetry.addData("kP(G1DpadUp/Down)", aprilTagAlignment.getkP());
-        telemetry.addData("kD(G1DpadUp/Down)", aprilTagAlignment.getkD());
+        telemetry.addData("kP_Rotation(G1DpadUp/Down)", aprilTagAlignment.getkP_rotation());
+        telemetry.addData("kD_Rotation(G1DpadUp/Down)", aprilTagAlignment.getkD_rotation());
+        telemetry.addData("kP_Strafe(G1DpadUp/Down)", aprilTagAlignment.getkP_strafe());
+        telemetry.addData("kD_Strafe(G1DpadUp/Down)", aprilTagAlignment.getkD_strafe());
         telemetry.addData("Step Size(G1B)", aprilTagAlignment.getStepSize());
         telemetry.addData("Currently Modifying(G1DpadLeft)", aprilTagAlignment.getCurrentlyModifying());
+        telemetry.addData("HorAngleDelta", limelight.getHorizontalDelta());
+        telemetry.addData("VerAngleDelta", limelight.getVerticalDelta());
+        telemetry.addData("IsValid", limelight.isTargetVisible());
 
-
+        Pose3D botPose = limelight.getBotPose();
+        if (botPose != null && limelight.isTargetVisible()) {
+            telemetry.addData("3D X (m)", "%.2f", botPose.getPosition().x);
+            telemetry.addData("3D Y (m)", "%.2f", botPose.getPosition().y);
+            telemetry.addData("3D Z (m)", "%.2f", botPose.getPosition().z);
+            telemetry.addData("Yaw (°)", "%.2f", botPose.getOrientation().getYaw(org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES));
+            telemetry.addData("Pitch (°)", "%.2f", botPose.getOrientation().getPitch(org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES));
+            telemetry.addData("Roll (°)", "%.2f", botPose.getOrientation().getRoll(org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES));
+        } else {
+            telemetry.addData("3D BotPose", "No 3D Pose Available");
+        }
         telemetry.addData("Runtime:", TeleOpRuntime.seconds());
         telemetry.setMsTransmissionInterval(30);
         telemetry.update();

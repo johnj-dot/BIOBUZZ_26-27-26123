@@ -18,13 +18,24 @@ android {
         buildConfig = true
     }
 
-    compileSdkVersion 30
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace = 'com.qualcomm.ftcrobotcontroller'
+
+    sourceSets {
+        main {
+            java {
+                exclude '**/external/samples/ConceptAprilTag*.java'
+                exclude '**/external/samples/RobotAutoDriveToAprilTag*.java'
+                exclude '**/external/samples/ConceptGamepadEdgeDetection.java'
+                exclude '**/external/utilities/UtilityTest*.java'
+            }
+        }
+    }
 }
 
 apply from: '../build.dependencies.gradle'
