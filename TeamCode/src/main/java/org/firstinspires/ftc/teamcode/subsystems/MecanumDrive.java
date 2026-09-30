@@ -51,6 +51,9 @@ public class MecanumDrive {
         if (aprilTagAlignment != null) {
             rx *= aprilTagAlignment.getRotationMultiplier();
             rx += aprilTagAlignment.getAddedRotation();
+
+            x *= aprilTagAlignment.getStrafeMultiplier();
+            x += aprilTagAlignment.getAddedStrafe();
         }
 
         frontLeftMotorSpeed = -y + x + rx;
